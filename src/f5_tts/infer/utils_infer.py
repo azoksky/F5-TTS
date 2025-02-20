@@ -5,7 +5,6 @@ import sys
 
 os.environ["PYTORCH_ENABLE_MPS_FALLBACK"] = "1"  # for MPS device compatibility
 sys.path.append(f"{os.path.dirname(os.path.abspath(__file__))}/../../third_party/BigVGAN/")
-from transformers import WhisperForConditionalGeneration, WhisperProcessor
 import hashlib
 import re
 import tempfile
@@ -144,6 +143,7 @@ asr_pipe = None
 
 
 def initialize_asr_pipeline(device: str = device, dtype=None):
+    print("There is need to transcribe. This is to check if this function is called or not")
     if dtype is None:
         dtype = (
             torch.float16
@@ -153,16 +153,13 @@ def initialize_asr_pipeline(device: str = device, dtype=None):
             else torch.float32
         )
     local_dir = "/kaggle/working/F5-TTS/ckpts/whisper-large-v3-turbo"
-    model = WhisperForConditionalGeneration.from_pretrained(local_dir, local_files_only=True)
-    tokenizer = WhisperProcessor.from_pretrained(local_dir, local_files_only=True)
     global asr_pipe
-    print(local_dir)
     asr_pipe = pipeline(
         "automatic-speech-recognition",
-        model=model,
-        tokenizer=tokenizer
+        model=local_dir,
         torch_dtype=dtype,
         device=device,
+        local_files_only=True,
     )
 
 
