@@ -53,7 +53,7 @@ DEFAULT_TTS_MODEL_CFG = [
 
 # load models
 
-vocoder = load_vocoder()
+vocoder = load_vocoder(is_local=True, local_path="/kaggle/working/F5-TTS/ckpts/vocos-mel-24khz")
 
 
 def load_f5tts(ckpt_path="/kaggle/working/F5-TTS/ckpts/F5TTS_Base/model_1200000.safetensors"):
