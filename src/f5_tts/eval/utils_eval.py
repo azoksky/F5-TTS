@@ -281,6 +281,7 @@ def get_librispeech_test(metalst, gen_wav_dir, gpus, librispeech_test_clean_path
 
 
 def load_asr_model(lang, ckpt_dir=""):
+    print("load_asr_model being called")
     if lang == "zh":
         from funasr import AutoModel
 
@@ -303,6 +304,7 @@ def load_asr_model(lang, ckpt_dir=""):
 
 
 def run_asr_wer(args):
+    print("run_asr_wer being called")
     rank, lang, test_set, ckpt_dir = args
 
     if lang == "zh":
