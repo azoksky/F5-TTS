@@ -61,7 +61,7 @@ def load_f5tts(ckpt_path="/kaggle/working/F5-TTS/ckpts/F5TTS_Base/model_1200000.
     return load_model(DiT, F5TTS_model_cfg, ckpt_path)
 
 
-def load_e2tts(ckpt_path="/kaggle/working/F5-TTS/ckpts/E2TTS_Base/model_1200000.safetensors")):
+def load_e2tts(ckpt_path="/kaggle/working/F5-TTS/ckpts/E2TTS_Base/model_1200000.safetensors"):
     E2TTS_model_cfg = dict(dim=1024, depth=24, heads=16, ff_mult=4)
     return load_model(UNetT, E2TTS_model_cfg, ckpt_path)
 
