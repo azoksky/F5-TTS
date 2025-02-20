@@ -5,7 +5,7 @@ import sys
 
 os.environ["PYTORCH_ENABLE_MPS_FALLBACK"] = "1"  # for MPS device compatibility
 sys.path.append(f"{os.path.dirname(os.path.abspath(__file__))}/../../third_party/BigVGAN/")
-
+from transformers import WhisperForConditionalGeneration, WhisperProcessor
 import hashlib
 import re
 import tempfile
@@ -152,10 +152,15 @@ def initialize_asr_pipeline(device: str = device, dtype=None):
             and not torch.cuda.get_device_name().endswith("[ZLUDA]")
             else torch.float32
         )
+    local_dir = "/kaggle/working/F5-TTS/ckpts/whisper-large-v3-turbo"
+    model = WhisperForConditionalGeneration.from_pretrained(local_dir, local_files_only=True)
+    tokenizer = WhisperProcessor.from_pretrained(local_dir, local_files_only=True)
     global asr_pipe
+    print(local_dir)
     asr_pipe = pipeline(
         "automatic-speech-recognition",
-        model="/kaggle/working/F5-TTS/ckpts/whisper-large-v3-turbo",
+        model=model,
+        tokenizer=tokenizer
         torch_dtype=dtype,
         device=device,
     )
