@@ -43,25 +43,25 @@ from f5_tts.infer.utils_infer import (
 
 DEFAULT_TTS_MODEL = "F5-TTS"
 tts_model_choice = DEFAULT_TTS_MODEL
-
+BASE_MODEL_PATH = "/kaggle/working/ckpts"
 DEFAULT_TTS_MODEL_CFG = [
-    "/kaggle/working/F5-TTS/ckpts/F5TTS_Base/model_1200000.safetensors",
-    "/kaggle/working/F5-TTS/ckpts/F5TTS_Base/vocab.txt",
+    BASE_MODEL_PATH+"/F5TTS_Base/model_1200000.safetensors",
+    BASE_MODEL_PATH+"/F5TTS_Base/vocab.txt",
     json.dumps(dict(dim=1024, depth=22, heads=16, ff_mult=2, text_dim=512, conv_layers=4)),
 ]
 
 
 # load models
 
-vocoder = load_vocoder(is_local=True, local_path="/kaggle/working/F5-TTS/ckpts/vocos-mel-24khz")
+vocoder = load_vocoder(is_local=True, local_path=BASE_MODEL_PATH+"/vocos-mel-24khz")
 
 
-def load_f5tts(ckpt_path="/kaggle/working/F5-TTS/ckpts/F5TTS_Base/model_1200000.safetensors"):
+def load_f5tts(ckpt_path=BASE_MODEL_PATH+"/F5TTS_Base/model_1200000.safetensors"):
     F5TTS_model_cfg = dict(dim=1024, depth=22, heads=16, ff_mult=2, text_dim=512, conv_layers=4)
     return load_model(DiT, F5TTS_model_cfg, ckpt_path)
 
 
-def load_e2tts(ckpt_path="/kaggle/working/F5-TTS/ckpts/E2TTS_Base/model_1200000.safetensors"):
+def load_e2tts(ckpt_path=BASE_MODEL_PATH+"/E2TTS_Base/model_1200000.safetensors"):
     E2TTS_model_cfg = dict(dim=1024, depth=24, heads=16, ff_mult=4)
     return load_model(UNetT, E2TTS_model_cfg, ckpt_path)
 
@@ -882,8 +882,10 @@ If you're having issues, try converting your reference audio to WAV or MP3, clip
     default=False,
     help="Automatically launch the interface in the default web browser",
 )
-def main(port, host, share, api, root_path, inbrowser):
-    global app
+@click.option("--model_path", default="/kaggle/working/ckpts", help="Base folder for models")
+def main(port, host, share, api, root_path, inbrowser, model_path):
+    global app, BASE_MODEL_PATH
+    BASE_MODEL_PATH = model_path
     print("Starting app...")
     app.queue(api_open=api).launch(
         server_name=host,
